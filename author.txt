@@ -1,2 +1,2 @@
 Mnatsakanian Arutiun
-Phython
+Python
