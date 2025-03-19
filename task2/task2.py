@@ -1,41 +1,26 @@
+#импорт модуля sys
 import sys
 
-def read_circle_data(file_path):
+#создание функции для считывания данных в файлах
+def read_data(file_path, is_circle=False):
     with open(file_path, 'r') as file:
-        x0 = float(file.readline().strip())
-        y0 = float(file.readline().strip())
-        r = float(file.readline().strip())
-    return x0, y0, r
+        if is_circle:
+            return tuple(map(float, file.read().strip().split()))
+        return [tuple(map(float, line.strip().split())) for line in file]
 
-def read_points(file_path):
-    points = []
-    with open(file_path, 'r') as file:
-        for line in file:
-            x, y = map(float, line.strip().split())
-            points.append((x, y))
-    return points
-
+#создание функции для вычисления расстояния
 def determine_position(x0, y0, r, x, y):
     distance_squared = (x - x0) ** 2 + (y - y0) ** 2
-    if distance_squared < r ** 2:
-        return 1  # Внутри
-    elif distance_squared == r ** 2:
-        return 0  # На круге
-    else:
-        return 2  # Снаружи
+    return 1 if distance_squared < r ** 2 else 0 if distance_squared == r ** 2 else 2
 
+#проверка программы, считывание данных и вывод
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: python task2.py circle.txt dot.txt")
         sys.exit(1)
 
-    circle_file = sys.argv[1]
-    dot_file = sys.argv[2]
-
-    x0, y0, r = read_circle_data(circle_file)
-    points = read_points(dot_file)
+    x0, y0, r = read_data(sys.argv[1], is_circle=True)
+    points = read_data(sys.argv[2])
 
     for x, y in points:
-        position = determine_position(x0, y0, r, x, y)
-        print(position)
-
+        print(determine_position(x0, y0, r, x, y))
